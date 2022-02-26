@@ -1,8 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <metadata>
-	<name>regret pedestals</name>
-	<directory>regret pedestals</directory>
-	<description/>
-	<version>1.0</version>
-	<visibility/>
+    <name>regret pedestals</name>
+    <directory>regret pedestals</directory>
+    <id>0</id>
+    <description></description>
+    <version>1.0</version>
+    <visibility>Public</visibility>
+    <tag id="Lua"/>
+    <tag id="Tweaks"/>
+    <tag id="Graphics"/>
 </metadata>
-

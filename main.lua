@@ -1,6 +1,8 @@
 -- Update plans:
 -- Detect blind items, make option in mod config menu
 
+-- SOURCE: https://github.com/seanstertm/Isaac-Regret-Pedestals
+
 mod = RegisterMod("Regret Pedestals", 1)
 
 local blindPedestalItemsInRoom = {}
