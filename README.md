@@ -5,3 +5,4 @@ This mod leaves a fading after-image of items that you did not pick up that disa
 
 # Links
 https://steamcommunity.com/sharedfiles/filedetails/?id=2766379837
+https://www.youtube.com/watch?v=u2CVKOebLng
