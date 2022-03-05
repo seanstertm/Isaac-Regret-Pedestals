@@ -4,6 +4,7 @@
 -- SOURCE: https://github.com/seanstertm/Isaac-Regret-Pedestals
 
 mod = RegisterMod("Regret Pedestals", 1)
+local stopWithHourglass = true
 
 local blindPedestalItemsInRoom = {}
 local blindShopItemsInRoom = {}
@@ -22,9 +23,59 @@ questionMarkSprite:SetFrame("Idle", 0)
 local itemSprite = Sprite()
 itemSprite:Load("gfx/005.100_collectible.anm2",true)
 
+function mod:SaveStorage()
+    if Game():GetFrameCount() <= 0 then return end
+    if stopWithHourglass then
+        mod:SaveData("true")
+    else
+        mod:SaveData("false")
+    end
+end
+
+function mod:LoadStorage()
+    if mod:HasData() then
+        savedata = mod:LoadData()
+        if savedata == "true" then
+            stopWithHourglass = true
+        else
+            stopWithHourglass = false
+        end
+    end
+end
+
+if ModConfigMenu then
+
+    local function SaveModConfig()
+        if stopWithHourglass then
+            mod:SaveData("true")
+        else
+            mod:SaveData("false")
+        end
+    end
+
+    ModConfigMenu.AddSetting("Regret Pedestals", "Settings", {
+        Type = ModConfigMenu.OptionType.BOOLEAN,
+		Default = true,
+		CurrentSetting = function()
+			return stopWithHourglass
+		end,
+		Display = function()
+			if stopWithHourglass then return "Disable with Glowing Hourglass: true"
+			else return "Disable with Glowing Hourglass: false" end
+		end,
+		OnChange = function(newvalue)
+			stopWithHourglass = newvalue
+			SaveModConfig()
+		end,
+		Info = {"Disable the apparation when holding Glowing Hourglass"}
+    })
+
+end
+
 -- POST_PICKUP_UPDATE runs each update the item is in view
 function mod:postPickupUpdate(entity)
     local isQuestionMark = true
+    local addToList = true
 
     -- If item pointer is not saved to memory, add to respective array
     if not contains(blindPedestalItemsInRoom, entity) and not contains(blindShopItemsInRoom, entity) then
@@ -40,7 +91,14 @@ function mod:postPickupUpdate(entity)
         --     end
         -- end
 
-        if isQuestionMark then
+        for i=0, Game():GetNumPlayers()-1 do
+            local player = Isaac.GetPlayer(i)
+            if player:GetActiveItem() == CollectibleType.COLLECTIBLE_GLOWING_HOUR_GLASS and stopWithHourglass then
+                addToList = false
+            end
+        end
+
+        if isQuestionMark and addToList then
             local entitySprite = entity:GetSprite()
 	        local name = entitySprite:GetAnimation()
 
@@ -50,8 +108,8 @@ function mod:postPickupUpdate(entity)
             if name == "ShopIdle" then
                 table.insert(blindShopItemsInRoom, entity)
             end
-        else
-            Isaac.ConsoleOutput("Visible item")
+        -- else
+        --     Isaac.ConsoleOutput("Visible item")
         end
     end
 end
@@ -175,3 +233,6 @@ mod:AddCallback(ModCallbacks.MC_POST_PICKUP_UPDATE, mod.postPickupUpdate, Pickup
 mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, mod.postNewRoom)
 mod:AddCallback(ModCallbacks.MC_POST_UPDATE, mod.postUpdate)
 mod:AddCallback(ModCallbacks.MC_POST_RENDER, mod.postRender)
+mod:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, mod.SaveStorage)
+mod:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, mod.SaveStorage)
+mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, mod.LoadStorage)

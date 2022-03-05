@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <metadata>
-    <name>regret pedestals</name>
+    <name>Regret Pedestals</name>
     <directory>regret pedestals</directory>
-    <id>0</id>
+    <id>2766379837</id>
     <description></description>
-    <version>1.0</version>
-    <visibility>Public</visibility>
+    <version>1.4</version>
+    <visibility>Private</visibility>
     <tag id="Lua"/>
     <tag id="Tweaks"/>
     <tag id="Graphics"/>
